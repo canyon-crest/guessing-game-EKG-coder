@@ -10,50 +10,10 @@ Extra:
 3. Game Mode Leaderboards
 4. Extreme Game Mode with range = 1000
 5. Input Validation
-6. Sound Effects for Correct and Incorrect Guesses
-
 */
 
 //Player Name
 let playerName = prompt("Enter your name: ", "");
-
-//Audio Context for sound effects - lazy initialized
-let audioCtx = null;
-
-function getAudioContext() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    return audioCtx;
-}
-
-function playCorrectSound() {
-    const ctx = getAudioContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    oscillator.frequency.value = 880;
-    oscillator.type = "sine";
-    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 0.5);
-}
-
-function playIncorrectSound() {
-    const ctx = getAudioContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    oscillator.frequency.value = 200;
-    oscillator.type = "sawtooth";
-    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 0.3);
-}
 
 //EXTRA: First and Last Names
 if(playerName && playerName.trim() !== ""){
