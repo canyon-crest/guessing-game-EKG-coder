@@ -1,3 +1,5 @@
+//ASK MR. HARE TO EXPLAIN HOW LEADERBOARD FUNCTIONS WORK AND HOW IT REPLACES VALUE WHEN IT IS LARGER...
+
 //Player Name
 let playerName = prompt("Enter your name: ", "");
 
@@ -20,7 +22,12 @@ if(playerName && playerName.trim() !== ""){
 let range = 0;
 let answer = 0;
 let guessCount = 0;
+let currentMode = "";
 const scores = [];
+const easyScores = [];
+const mediumScores = [];
+const hardScores = [];
+
 
 //Play Button
 document.getElementById("playBtn").addEventListener("click", play);
@@ -35,6 +42,16 @@ function play(){
         }
         levels[i].disabled = true;
     }
+
+    //Determines mode
+    if (range == 3) {
+        currentMode = "easy";
+    } else if (range == 10) {
+        currentMode = "medium";
+    } else {
+        currentMode = "hard";
+    }
+
     document.getElementById("msg").textContent = playerName + ", guess a number 1-" + range;
     answer = Math.floor(Math.random()*range)+1;
     guessCount = 0;
@@ -86,21 +103,63 @@ function makeGuess(){
 
 //Leaderboard
 function updateScore(score){
+    //Overall Scores
     scores.push(score);
+    scores.sort(function(a,b){return a-b}); // sort score increasing
+
+    //Update Overall Scores
     wins.textContent = "Total wins: " + scores.length;
     let sum = 0;
+    
     for(let i = 0; i < scores.length; i++){
         sum += scores[i]; // sum = sum + scores[i]
     }
     avgScore.textContent = "Average Score: " + (sum/scores.length).toFixed(1);
 
-    scores.sort(function(a,b){return a-b}); // sort score increasing
-
+    //Update Main Leaderboard
     let lb = document.getElementsByName("leaderboard");
     for(let i = 0; i < lb.length; i++){
         if(i < scores.length){
             lb[i].textContent = scores[i];
         }
+        else{
+            lb[i].textContent = "-" //EXTRA: Replace Empty Leaderboard Spots
+        }
+    }
+
+    //Store In Correct Leaderboard
+    if(currentMode == "easy"){
+        easyScores.push(score);
+        easyScores.sort(function(a, b){ return a - b; });
+    }
+    else if(currentMode == "medium"){
+        mediumScores.push(score);
+        mediumScores.sort(function(a, b){ return a - b; });
+    }
+    else if(currentMode == "hard"){
+        hardScores.push(score);
+        hardScores.sort(function(a, b){ return a - b; });
+    }
+
+    updateModeLeaderboards()
+}
+
+//EXTRA: Game Mode Leaderboards
+function updateModeLeaderboards(){
+    let easyIds = ["easy1", "easy2", "easy3"];
+    let mediumIds = ["medium1", "medium2", "medium3"];
+    let hardIds = ["hard1", "hard2", "hard3"];
+
+    //condition ? valueIfTrue : valueIfFalse
+    for(let i = 0; i < 3; i++){
+        document.getElementById(easyIds[i]).textContent =
+            i < easyScores.length ? easyScores[i] : "-";
+
+        document.getElementById(mediumIds[i]).textContent =
+            i < mediumScores.length ? mediumScores[i] : "-";
+
+        document.getElementById(hardIds[i]).textContent =
+            i < hardScores.length ? hardScores[i] : "-";
     }
 }
 
