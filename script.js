@@ -163,6 +163,12 @@ function updateModeLeaderboards(){
     }
 }
 
+//Give Up
+document.getElementById("giveUpBtn").addEventListener("click", giveUp)
+
+function giveUp(){
+    
+}
 //Reset
 function resetGame(){
     guess.value = "";
