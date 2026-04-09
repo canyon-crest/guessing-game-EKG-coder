@@ -163,7 +163,7 @@ function updateModeLeaderboards(){
     }
 }
 
-//Give Up
+//Give Up Button
 document.getElementById("giveUpBtn").addEventListener("click", giveUp)
 
 function giveUp(){
@@ -171,6 +171,36 @@ function giveUp(){
     updateScore(range); //Score becomes range value
     resetGame()
 }
+
+//Date with Month Names and Suffixes
+let now = new Date()
+
+//Full Month Name
+let month = now.getMonth();
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+let monthName = months[month];
+
+//Day With Suffix
+let day = now.getDate();
+
+function getSuffix(day){
+    if (day >= 11 && day <= 13){
+        return "th";
+    }
+
+    switch (day % 10){
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+    }
+}
+
+//Current Year
+let year = now.getFullYear();
+
+document.getElementById("date").textContent = monthName + getSuffix(day) + ", " + year;
+
 
 //Reset
 function resetGame(){
