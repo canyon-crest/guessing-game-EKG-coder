@@ -3,10 +3,57 @@ Notes:
 1. ASK MR. HARE TO EXPLAIN HOW LEADERBOARD FUNCTIONS WORK AND HOW IT REPLACES VALUE WHEN IT IS LARGER...
 2. Understand "Date with Month Names and Suffixes and Live Time" and "Round Timer, Fastest Game, and Average Time" javascript code
 3. Work on CSS styling sheets for design
+
+Extra:
+1. First and Last Names
+2. Replace Empty Leaderboard Spots with "-"
+3. Game Mode Leaderboards
+4. Extreme Game Mode with range = 1000
+5. Input Validation
+6. Sound Effects for Correct and Incorrect Guesses
+
 */
 
 //Player Name
 let playerName = prompt("Enter your name: ", "");
+
+//Audio Context for sound effects - lazy initialized
+let audioCtx = null;
+
+function getAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioCtx;
+}
+
+function playCorrectSound() {
+    const ctx = getAudioContext();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    oscillator.frequency.value = 880;
+    oscillator.type = "sine";
+    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.5);
+}
+
+function playIncorrectSound() {
+    const ctx = getAudioContext();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    oscillator.frequency.value = 200;
+    oscillator.type = "sawtooth";
+    gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.3);
+}
 
 //EXTRA: First and Last Names
 if(playerName && playerName.trim() !== ""){
@@ -29,10 +76,15 @@ let answer = 0;
 let guessCount = 0;
 let currentMode = "";
 let roundStartTime = 0;
+wins.textContent = "Total wins: 0";
+avgScore.textContent = "Average Score: -";
+fastest.textContent = "Fastest Game: -";
+avgTime.textContent = "Average Time: -";
 const scores = [];
 const easyScores = [];
 const mediumScores = [];
 const hardScores = [];
+const extremeScores = [];
 const roundTimes = [];
 
 
@@ -53,10 +105,15 @@ function play(){
     //Determines mode; Mode Leaderboard
     if (range == 3) {
         currentMode = "easy";
-    } else if (range == 10) {
+    } 
+    else if (range == 10) {
         currentMode = "medium";
-    } else {
+    } 
+    else if (range == 100){
         currentMode = "hard";
+    }
+    else {
+        currentMode = "extreme";
     }
 
     document.getElementById("msg").textContent = playerName + ", guess a number 1-" + range;
@@ -73,6 +130,7 @@ function play(){
 //Guess Button
 function makeGuess(){
     let guess = parseInt(document.getElementById("guess").value);
+    //Input Validation
     if(isNaN(guess) || guess < 1 || guess > range){
         msg.textContent = "Please enter a valid number.";
         return;
@@ -81,6 +139,9 @@ function makeGuess(){
 
     if(guess == answer){
         msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries.";
+        document.getElementById("msg").classList.add("Celebrate");
+        setTimeout(() => document.getElementById("msg").classList.remove("Celebrate"), 500);
+        playCorrectSound();
         updateScore(guessCount);
         updateTimeStats();
         resetGame();
@@ -108,6 +169,9 @@ function makeGuess(){
     else{
         msg.textContent = "Too high, try again. You are " + proximity +"!";
     }
+    document.getElementById("msg").classList.add("shake");
+    setTimeout(() => document.getElementById("msg").classList.remove("shake"), 500);
+    playIncorrectSound();
     }   
 }
 
@@ -150,6 +214,10 @@ function updateScore(score){
         hardScores.push(score);
         hardScores.sort(function(a, b){ return a - b; });
     }
+    else if (currentMode == "extreme"){
+        hardScores.push(score);
+        hardScores.sort(function(a, b){ return a - b; })
+    }
 
     updateModeLeaderboards()
 }
@@ -159,6 +227,7 @@ function updateModeLeaderboards(){
     let easyIds = ["easy1", "easy2", "easy3"];
     let mediumIds = ["medium1", "medium2", "medium3"];
     let hardIds = ["hard1", "hard2", "hard3"];
+    let extremeIds = ["extreme1", "extreme2", "extreme3"];
 
     //condition ? valueIfTrue : valueIfFalse
     for(let i = 0; i < 3; i++){
@@ -170,6 +239,9 @@ function updateModeLeaderboards(){
 
         document.getElementById(hardIds[i]).textContent =
             i < hardScores.length ? hardScores[i] : "-";
+        
+        document.getElementById(extremeIds[i]).textContent =
+            i < extremeScores.length ? extremeScores[i]: "-";
     }
 }
 
@@ -198,6 +270,7 @@ function getSuffix(day){
         default: return "th";
     }
 }
+
 function updateDateTime() {
     let now = new Date();
 
