@@ -23,10 +23,12 @@ let range = 0;
 let answer = 0;
 let guessCount = 0;
 let currentMode = "";
+let roundStartTime = 0;
 const scores = [];
 const easyScores = [];
 const mediumScores = [];
 const hardScores = [];
+const roundTimes = [];
 
 
 //Play Button
@@ -172,16 +174,8 @@ function giveUp(){
     resetGame()
 }
 
-//Date with Month Names and Suffixes
+//Date with Month Names and Suffixes and Live Time
 let now = new Date()
-
-//Full Month Name
-let month = now.getMonth();
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-let monthName = months[month];
-
-//Day With Suffix
-let day = now.getDate();
 
 function getSuffix(day){
     if (day >= 11 && day <= 13){
@@ -195,11 +189,32 @@ function getSuffix(day){
         default: return "th";
     }
 }
+function updateDateTime() {
+    let now = new Date();
 
-//Current Year
-let year = now.getFullYear();
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-document.getElementById("date").textContent = monthName + " " + day + getSuffix(day) + ", " + year;
+    let monthName = months[now.getMonth()];
+    let day = now.getDate();
+    let year = now.getFullYear();
+
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
+
+    document.getElementById("date").textContent =
+        monthName + " " + day + getSuffix(day) + ", " + year + " " + hours + ":" + minutes + ":" + seconds;
+}
+
+updateDateTime();
+setInterval(updateDateTime, 1000);
 
 
 //Reset
