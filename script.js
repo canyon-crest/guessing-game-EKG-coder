@@ -41,6 +41,7 @@ let roundStartTime = 0;
 let currentStreak = 0;
 let bestStreak = 0;
 let hintUsed = false;
+let guessHistory = [];
 const scores = [];
 const easyScores = [];
 const mediumScores = [];
@@ -82,11 +83,14 @@ function play(){
     answer = Math.floor(Math.random()*range)+1;
     guessCount = 0;
     hintUsed = false;
+    guessHistory = [];
+    updateGuessHistoryDisplay();
 
     roundStartTime = new Date().getTime(); //Round Timer, Fastest Game, and Average Time
 
     guessBtn.disabled = false;
     giveUpBtn.disabled = false;
+    hintBtn.disabled = false;
     playBtn.disabled = true;
 }
 
@@ -114,6 +118,9 @@ function makeGuess(){
             finalScore++;
         }
 
+        guessHistory.push(guess + " (correct)");
+        updateGuessHistoryDisplay();
+
         updateScore(finalScore);
         updateTimeStats();
         resetGame();
@@ -122,8 +129,8 @@ function makeGuess(){
     
     //Proximity: Hot or cold
     else{
-    let difference = Math.abs(guess-answer);
-    let proximity = "";
+        let difference = Math.abs(guess-answer);
+        let proximity = "";
     
     if(difference <= 2){
         proximity = "hot";
@@ -137,10 +144,13 @@ function makeGuess(){
     
     if(guess < answer){
         msg.textContent = "Too low, try again. You are " + proximity + "!";
+        guessHistory.push(guess + " (too low, " + proximity + ")");
     }
     else{
         msg.textContent = "Too high, try again. You are " + proximity +"!";
+        guessHistory.push(guess + " (too high, " + proximity + ")");
     }
+    updateGuessHistoryDisplay();
     }   
 }
 
@@ -273,13 +283,30 @@ function giveHint(){
     hintBtn.disabled = true;
 }
 
+//EXTRA: Guess History
+updateGuessHistoryDisplay();
+function updateGuessHistoryDisplay() {
+    if(guessHistory.length === 0){
+        document.getElementById("history").textContent = "Previous guesses: -";
+    }
+    else{
+        document.getElementById("history").textContent =
+            "Previous guesses: " + guessHistory.join(", ");
+    }
+}
+
 //Give Up Button
 document.getElementById("giveUpBtn").addEventListener("click", giveUp)
 
 function giveUp(){
     msg.textContent = playerName + ", you gave up. The answer was " + answer + ".";
+    
     currentStreak = 0;
     updateStreakDisplay();
+    
+    guessHistory.push("Gave up");
+    updateGuessHistoryDisplay();
+    
     updateScore(range); //Score becomes range value
     updateTimeStats();
     resetGame();
