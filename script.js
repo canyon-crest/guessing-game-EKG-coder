@@ -57,28 +57,31 @@ function makeGuess(){
         msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries.";
         updateScore(guessCount);
         resetGame();
+        return;
     }
+    
     //Proximity: Hot or cold
-    else {
-        let difference = Math.abs(guess-answer);
-        let proximity = "";
-        
-        if(difference <= 2){
-            proximity = "hot";
-        }
-        else if(difference <= 5){
-            proximity = "warm";
-        }
-        else{
-            proximity = "cold";
-        }
+    else{
+    let difference = Math.abs(guess-answer);
+    let proximity = "";
+    
+    if(difference <= 2){
+        proximity = "hot";
     }
+    else if(difference <= 5){
+        proximity = "warm";
+    }
+    else{
+        proximity = "cold";
+    }
+    
     if(guess < answer){
         msg.textContent = "Too low, try again. You are " + proximity + "!";
     }
     else{
         msg.textContent = "Too high, try again. You are " + proximity +"!";
     }
+    }   
 }
 
 //Leaderboard
@@ -86,7 +89,7 @@ function updateScore(score){
     scores.push(score);
     wins.textContent = "Total wins: " + scores.length;
     let sum = 0;
-    for(i = 0; i < scores.length; i++){
+    for(let i = 0; i < scores.length; i++){
         sum += scores[i]; // sum = sum + scores[i]
     }
     avgScore.textContent = "Average Score: " + (sum/scores.length).toFixed(1);
