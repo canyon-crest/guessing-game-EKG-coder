@@ -54,15 +54,30 @@ function makeGuess(){
     guessCount++;
 
     if(guess == answer){
-        msg.textContent = "Correct " + playerName + "!" + " It took " + guessCount + " tries.";
+        msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries.";
         updateScore(guessCount);
         resetGame();
     }
-    else if(guess < answer){
-        msg.textContent = "Too low, try again."
+    //Proximity: Hot or cold
+    else {
+        let difference = Math.abs(guess-answer);
+        let proximity = "";
+        
+        if(difference <= 2){
+            proximity = "hot";
+        }
+        else if(difference <= 5){
+            proximity = "warm";
+        }
+        else{
+            proximity = "cold";
+        }
+    }
+    if(guess < answer){
+        msg.textContent = "Too low, try again. You are " + proximity + "!";
     }
     else{
-        msg.textContent = "Too high, try again"
+        msg.textContent = "Too high, try again. You are " + proximity +"!";
     }
 }
 
