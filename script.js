@@ -11,7 +11,7 @@ Extra:
 4. Extreme Game Mode with range = 1000
 5. Input Validation
 6. Streaks
-7. 
+7. Hints
 */
 
 //Player Name
@@ -40,6 +40,7 @@ let currentMode = "";
 let roundStartTime = 0;
 let currentStreak = 0;
 let bestStreak = 0;
+let hintUsed = false;
 const scores = [];
 const easyScores = [];
 const mediumScores = [];
@@ -51,6 +52,7 @@ const roundTimes = [];
 //Play Button
 document.getElementById("playBtn").addEventListener("click", play);
 document.getElementById("guessBtn").addEventListener("click", makeGuess);
+document.getElementById("hintBtn").addEventListener("click", giveHint);
 
 function play(){
     let levels = document.getElementsByName("level");
@@ -79,6 +81,7 @@ function play(){
     document.getElementById("msg").textContent = playerName + ", guess a number 1-" + range;
     answer = Math.floor(Math.random()*range)+1;
     guessCount = 0;
+    hintUsed = false;
 
     roundStartTime = new Date().getTime(); //Round Timer, Fastest Game, and Average Time
 
@@ -106,7 +109,12 @@ function makeGuess(){
         }
         updateStreakDisplay();
 
-        updateScore(guessCount);
+        let finalScore = guessCount;
+        if(hintUsed){
+            finalScore++;
+        }
+
+        updateScore(finalScore);
         updateTimeStats();
         resetGame();
         return;
@@ -213,6 +221,58 @@ function updateStreakDisplay() {
     document.getElementById("bestStreak").textContent = "Best Streak: " + bestStreak;
 }
 
+//EXTRA: Hints
+function giveHint(){
+    if(hintUsed){
+        msg.textContent = "You already used your hint this round.";
+        return;
+    }
+
+    let hintMessage = "";
+
+    if(currentMode == "easy"){
+        if(answer % 2 == 0){
+            hintMessage = "Hint: The number is even.";
+        }
+        else{
+            hintMessage = "Hint: The number is odd.";
+        }
+    }
+    else if(currentMode == "medium"){
+        if(answer <= range / 2){
+            hintMessage = "Hint: The number is in the lower half.";
+        }
+        else{
+            hintMessage = "Hint: The number is in the upper half.";
+        }
+    }
+    else if(currentMode == "hard"){
+        if(answer % 5 == 0){
+            hintMessage = "Hint: The number is a multiple of 5.";
+        }
+        else{
+            hintMessage = "Hint: The number is not a multiple of 5.";
+        }
+    }
+    else{
+        let lower = Math.floor(answer / 100) * 100;
+        let upper = lower + 99;
+
+        if(lower < 1){
+            lower = 1;
+        }
+        if(upper > range){
+            upper = range;
+        }
+
+        hintMessage = "Hint: The number is between " + lower + " and " + upper + ".";
+    }
+
+    msg.textContent = hintMessage;
+    hintUsed = true;
+    hintBtn.disabled = true;
+}
+
 //Give Up Button
 document.getElementById("giveUpBtn").addEventListener("click", giveUp)
 
@@ -299,6 +359,7 @@ function resetGame(){
     guess.value = "";
     guessBtn.disabled = true;
     giveUpBtn.disabled = true;
+    hintBtn.disabled = true;
     playBtn.disabled = false;
     e.disabled = false;
     m.disabled = false;
