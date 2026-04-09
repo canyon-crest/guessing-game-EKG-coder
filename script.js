@@ -4,7 +4,7 @@ let playerName = prompt("Enter your name: ", "");
 //EXTRA: First and Last Names
 if(playerName && playerName.trim() !== ""){
     playerName = playerName.trim().toLowerCase();
-    let words = playerName.split("") // Separate each individual word into array
+    let words = playerName.split(" ") // Separate each individual word into array
     let result = "";
 
     for (let i = 0; i < words.length; i++){
