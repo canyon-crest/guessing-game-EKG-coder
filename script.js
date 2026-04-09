@@ -199,7 +199,7 @@ function getSuffix(day){
 //Current Year
 let year = now.getFullYear();
 
-document.getElementById("date").textContent = monthName + getSuffix(day) + ", " + year;
+document.getElementById("date").textContent = monthName + " " + day + getSuffix(day) + ", " + year;
 
 
 //Reset
