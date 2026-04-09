@@ -167,8 +167,11 @@ function updateModeLeaderboards(){
 document.getElementById("giveUpBtn").addEventListener("click", giveUp)
 
 function giveUp(){
-    
+    msg.textContent = playerName + ", you gave up. The answer was " + answer + ".";
+    updateScore(range); //Score becomes range value
+    resetGame()
 }
+
 //Reset
 function resetGame(){
     guess.value = "";
