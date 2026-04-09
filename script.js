@@ -10,6 +10,8 @@ Extra:
 3. Game Mode Leaderboards
 4. Extreme Game Mode with range = 1000
 5. Input Validation
+6. Streaks
+7. 
 */
 
 //Player Name
@@ -36,6 +38,8 @@ let answer = 0;
 let guessCount = 0;
 let currentMode = "";
 let roundStartTime = 0;
+let currentStreak = 0;
+let bestStreak = 0;
 const scores = [];
 const easyScores = [];
 const mediumScores = [];
@@ -94,7 +98,14 @@ function makeGuess(){
     guessCount++;
 
     if(guess == answer){
-        msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries.";
+        msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries. Streak: " + (currentStreak + 1);
+        
+        currentStreak++;
+        if(currentStreak > bestStreak){
+            bestStreak = currentStreak;
+        }
+        updateStreakDisplay();
+
         updateScore(guessCount);
         updateTimeStats();
         resetGame();
@@ -164,7 +175,7 @@ function updateScore(score){
         hardScores.push(score);
         hardScores.sort(function(a, b){ return a - b; });
     }
-    else if(currenMode == "extreme"){
+    else if(currentMode == "extreme"){
         extremeScores.push(score);
         extremeScores.sort(function(a, b){ return a - b; });
     }
@@ -195,11 +206,20 @@ function updateModeLeaderboards(){
     }
 }
 
+//EXTRA: Streaks
+updateStreakDisplay();
+function updateStreakDisplay() {
+    document.getElementById("streak").textContent = "Current Streak: " + currentStreak;
+    document.getElementById("bestStreak").textContent = "Best Streak: " + bestStreak;
+}
+
 //Give Up Button
 document.getElementById("giveUpBtn").addEventListener("click", giveUp)
 
 function giveUp(){
     msg.textContent = playerName + ", you gave up. The answer was " + answer + ".";
+    currentStreak = 0;
+    updateStreakDisplay();
     updateScore(range); //Score becomes range value
     updateTimeStats();
     resetGame();
@@ -220,6 +240,7 @@ function getSuffix(day){
         default: return "th";
     }
 }
+
 function updateDateTime() {
     let now = new Date();
 
@@ -282,4 +303,5 @@ function resetGame(){
     e.disabled = false;
     m.disabled = false;
     h.disabled = false;
+    ex.disabled = false;
 }
