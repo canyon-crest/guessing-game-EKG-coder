@@ -3,6 +3,13 @@ Notes:
 1. ASK MR. HARE TO EXPLAIN HOW LEADERBOARD FUNCTIONS WORK AND HOW IT REPLACES VALUE WHEN IT IS LARGER...
 2. Understand "Date with Month Names and Suffixes and Live Time" and "Round Timer, Fastest Game, and Average Time" javascript code
 3. Work on CSS styling sheets for design
+
+Extra:
+1. First and Last Names
+2. Replace Empty Leaderboard Spots with "-"
+3. Game Mode Leaderboards
+4. Extreme Game Mode with range = 1000
+5. Input Validation
 */
 
 //Player Name
@@ -79,6 +86,7 @@ function play(){
 //Guess Button
 function makeGuess(){
     let guess = parseInt(document.getElementById("guess").value);
+    //Input Validation
     if(isNaN(guess) || guess < 1 || guess > range){
         msg.textContent = "Please enter a valid number.";
         return;
