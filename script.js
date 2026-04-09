@@ -3,13 +3,6 @@ Notes:
 1. ASK MR. HARE TO EXPLAIN HOW LEADERBOARD FUNCTIONS WORK AND HOW IT REPLACES VALUE WHEN IT IS LARGER...
 2. Understand "Date with Month Names and Suffixes and Live Time" and "Round Timer, Fastest Game, and Average Time" javascript code
 3. Work on CSS styling sheets for design
-
-Extra:
-1. First and Last Names
-2. Replace Empty Leaderboard Spots with "-"
-3. Game Mode Leaderboards
-4. Extreme Game Mode with range = 1000
-5. Input Validation
 */
 
 //Player Name
@@ -36,10 +29,6 @@ let answer = 0;
 let guessCount = 0;
 let currentMode = "";
 let roundStartTime = 0;
-wins.textContent = "Total wins: 0";
-avgScore.textContent = "Average Score: -";
-fastest.textContent = "Fastest Game: -";
-avgTime.textContent = "Average Time: -";
 const scores = [];
 const easyScores = [];
 const mediumScores = [];
@@ -72,7 +61,7 @@ function play(){
     else if (range == 100){
         currentMode = "hard";
     }
-    else {
+    else{
         currentMode = "extreme";
     }
 
@@ -90,7 +79,6 @@ function play(){
 //Guess Button
 function makeGuess(){
     let guess = parseInt(document.getElementById("guess").value);
-    //Input Validation
     if(isNaN(guess) || guess < 1 || guess > range){
         msg.textContent = "Please enter a valid number.";
         return;
@@ -99,9 +87,6 @@ function makeGuess(){
 
     if(guess == answer){
         msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries.";
-        document.getElementById("msg").classList.add("Celebrate");
-        setTimeout(() => document.getElementById("msg").classList.remove("Celebrate"), 500);
-        playCorrectSound();
         updateScore(guessCount);
         updateTimeStats();
         resetGame();
@@ -129,9 +114,6 @@ function makeGuess(){
     else{
         msg.textContent = "Too high, try again. You are " + proximity +"!";
     }
-    document.getElementById("msg").classList.add("shake");
-    setTimeout(() => document.getElementById("msg").classList.remove("shake"), 500);
-    playIncorrectSound();
     }   
 }
 
@@ -174,9 +156,9 @@ function updateScore(score){
         hardScores.push(score);
         hardScores.sort(function(a, b){ return a - b; });
     }
-    else if (currentMode == "extreme"){
-        hardScores.push(score);
-        hardScores.sort(function(a, b){ return a - b; })
+    else if(currenMode == "extreme"){
+        extremeScores.push(score);
+        extremeScores.sort(function(a, b){ return a - b; });
     }
 
     updateModeLeaderboards()
@@ -201,7 +183,7 @@ function updateModeLeaderboards(){
             i < hardScores.length ? hardScores[i] : "-";
         
         document.getElementById(extremeIds[i]).textContent =
-            i < extremeScores.length ? extremeScores[i]: "-";
+            i < extremeScores.length ? extremeScores[i] : "-";
     }
 }
 
@@ -230,7 +212,6 @@ function getSuffix(day){
         default: return "th";
     }
 }
-
 function updateDateTime() {
     let now = new Date();
 
