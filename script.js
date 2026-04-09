@@ -45,7 +45,7 @@ function play(){
         levels[i].disabled = true;
     }
 
-    //Determines mode
+    //Determines mode; Mode Leaderboard
     if (range == 3) {
         currentMode = "easy";
     } else if (range == 10) {
@@ -57,6 +57,8 @@ function play(){
     document.getElementById("msg").textContent = playerName + ", guess a number 1-" + range;
     answer = Math.floor(Math.random()*range)+1;
     guessCount = 0;
+
+    roundStartTime = new Date().getTime(); //Round Timer, Fastest Game, and Average Time
 
     guessBtn.disabled = false;
     giveUpBtn.disabled = false;
@@ -75,6 +77,7 @@ function makeGuess(){
     if(guess == answer){
         msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries.";
         updateScore(guessCount);
+        updateTimeStats();
         resetGame();
         return;
     }
@@ -171,7 +174,8 @@ document.getElementById("giveUpBtn").addEventListener("click", giveUp)
 function giveUp(){
     msg.textContent = playerName + ", you gave up. The answer was " + answer + ".";
     updateScore(range); //Score becomes range value
-    resetGame()
+    updateTimeStats();
+    resetGame();
 }
 
 //Date with Month Names and Suffixes and Live Time
@@ -216,6 +220,31 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
+//Round Timer, Fastest Game, and Average Time
+function updateTimeStats() {
+    let endTime = new Date().getTime();
+    let elapsedTime = (endTime - roundStartTime) / 1000; // seconds
+
+    roundTimes.push(elapsedTime);
+
+    let fastestTime = roundTimes[0];
+    let sum = 0;
+
+    for (let i = 0; i < roundTimes.length; i++) {
+        if (roundTimes[i] < fastestTime) {
+            fastestTime = roundTimes[i];
+        }
+        sum += roundTimes[i];
+    }
+
+    let averageTime = sum / roundTimes.length;
+
+    document.getElementById("fastest").textContent =
+        "Fastest Game: " + fastestTime.toFixed(2) + " seconds";
+
+    document.getElementById("avgTime").textContent =
+        "Average Time: " + averageTime.toFixed(2) + " seconds";
+}
 
 //Reset
 function resetGame(){
