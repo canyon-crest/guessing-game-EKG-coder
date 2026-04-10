@@ -5,67 +5,111 @@
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
   </head>
-  
+
   <body>
-    <p id="date"></p>
+    <div class="game-wrapper">
 
-    <h3>Level</h3>
-    <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label>
-    <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label>
-    <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label>
-    <input type="radio" name="level" id="ex" value="1000"><label for="ex">Extreme</label>
+      <!-- Date / Clock -->
+      <p id="date"></p>
 
-    <button id="playBtn">Play</button>
+      <h1 class="game-title">Number Guessing Game</h1>
 
-    <h3 id="msg">Select a Level</h3>
-    <input type="text" id="guess">
-    <button id="guessBtn" disabled>Guess</button>
-    <button id="giveUpBtn" disabled>Give Up</button>
-    <button id="hintBtn" disabled>Hint</button>
+      <!-- Main Game Card -->
+      <div class="game-card">
+        <h3>Level</h3>
 
-    <p id="history">Previous guesses: -</p>
+        <!-- Level radio buttons -->
+        <div class="level-group">
+          <input type="radio" name="level" id="e" value="3" checked><label for="e">Easy</label>
+          <input type="radio" name="level" id="m" value="10"><label for="m">Medium</label>
+          <input type="radio" name="level" id="h" value="100"><label for="h">Hard</label>
+          <input type="radio" name="level" id="ex" value="1000"><label for="ex">Extreme</label>
+        </div>
 
-    <h3>Stats</h3>
-    <p id="wins">Total wins: 0</p>
-    <p id="streak">Current Streak: 0</p>
-    <p id="bestStreak">Best Streak: 0</p>
-    <p id="avgScore">Average Score: </p>
-    <p id="fastest">Fastest Game: </p>
-    <p id="avgTime">Average Time: </p>
+        <button id="playBtn">▶ Play</button>
 
-    <h3>Leaderboard</h3>
-    <ol>
-      <li name="leaderboard">-</li>
-      <li name="leaderboard">-</li>
-      <li name="leaderboard">-</li>
-    </ol>
+        <!-- Message -->
+        <h3 id="msg">Select a Level</h3>
 
-    <h3>Easy Leaderboard</h3>
-    <ol>
-      <li id="easy1">-</li>
-      <li id="easy2">-</li>
-      <li id="easy3">-</li>
-    </ol>
+        <!-- Guess row -->
+        <div class="guess-row">
+          <input type="text" id="guess" placeholder="?">
+          <button id="guessBtn" disabled>Guess</button>
+          <button id="giveUpBtn" disabled>Give Up</button>
+          <button id="hintBtn" disabled>Hint</button>
+        </div>
 
-    <h3>Medium Leaderboard</h3>
-    <ol>
-      <li id="medium1">-</li>
-      <li id="medium2">-</li>
-      <li id="medium3">-</li>
-    </ol>
+        <!-- Guess history -->
+        <p id="history">Previous guesses: -</p>
+      </div>
 
-    <h3>Hard Leaderboard</h3>
-    <ol>
-      <li id="hard1">-</li>
-      <li id="hard2">-</li>
-      <li id="hard3">-</li>
-    </ol>
+      <!-- Stats + Main Leaderboard -->
+      <div class="bottom-grid">
 
-    <h4>Extreme Leaderboard</h4>
-    <ol>
-      <li id="extreme1">-</li>
-      <li id="extreme2">-</li>
-      <li id="extreme3">-</li>
-    </ol>
+        <!-- Stats -->
+        <div class="stats-card">
+          <h3>Stats</h3>
+          <p id="wins">Total wins: 0</p>
+          <p id="streak">Current Streak: 0</p>
+          <p id="bestStreak">Best Streak: 0</p>
+          <p id="avgScore">Average Score: -</p>
+          <p id="fastest">Fastest Game: -</p>
+          <p id="avgTime">Average Time: -</p>
+        </div>
+
+        <!-- Overall Leaderboard -->
+        <div class="lb-card">
+          <h3>Leaderboard</h3>
+          <ol>
+            <li name="leaderboard">-</li>
+            <li name="leaderboard">-</li>
+            <li name="leaderboard">-</li>
+          </ol>
+        </div>
+
+        <!-- Mode Leaderboards -->
+        <div class="lb-mode-grid">
+          <div class="lb-card">
+            <h3>Easy Leaderboard</h3>
+            <ol>
+              <li id="easy1">-</li>
+              <li id="easy2">-</li>
+              <li id="easy3">-</li>
+            </ol>
+          </div>
+
+          <div class="lb-card">
+            <h3>Medium Leaderboard</h3>
+            <ol>
+              <li id="medium1">-</li>
+              <li id="medium2">-</li>
+              <li id="medium3">-</li>
+            </ol>
+          </div>
+
+          <div class="lb-card">
+            <h3>Hard Leaderboard</h3>
+            <ol>
+              <li id="hard1">-</li>
+              <li id="hard2">-</li>
+              <li id="hard3">-</li>
+            </ol>
+          </div>
+
+          <div class="lb-card">
+            <h3>Extreme Leaderboard</h3>
+            <ol>
+              <li id="extreme1">-</li>
+              <li id="extreme2">-</li>
+              <li id="extreme3">-</li>
+            </ol>
+          </div>
+        </div>
+
+      </div><!-- end bottom-grid -->
+
+    </div><!-- end game-wrapper -->
+
+    <div id="confettiContainer"></div>
   </body>
 </html>

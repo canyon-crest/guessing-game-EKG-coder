@@ -12,6 +12,9 @@ Extra:
 5. Input Validation
 6. Streaks
 7. Hints
+8. Guess History
+9. Confetti Celebration for Correct Guess
+10. CSS Styling
 */
 
 //Player Name
@@ -106,7 +109,8 @@ function makeGuess(){
 
     if(guess == answer){
         msg.textContent = "Correct " + playerName + "!" + " You took " + guessCount + " tries. Streak: " + (currentStreak + 1);
-        
+        launchConfetti();
+
         currentStreak++;
         if(currentStreak > bestStreak){
             bestStreak = currentStreak;
@@ -292,6 +296,36 @@ function updateGuessHistoryDisplay() {
     else{
         document.getElementById("history").textContent =
             "Previous guesses: " + guessHistory.join(", ");
+    }
+}
+
+//EXTRA: CONFETTI!!!
+function launchConfetti() {
+    const container = document.getElementById("confettiContainer");
+    const pieces = 30;
+
+    for(let i = 0; i < pieces; i++){
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+
+        if(Math.random() < 0.5){
+            confetti.classList.add("square");
+        }
+        else{
+            confetti.classList.add("circle");
+        }
+
+        const colors = ["#ff4d6d", "#ffd166", "#06d6a0", "#118ab2", "#8338ec"];
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.animationDelay = (Math.random() * 0.3) + "s";
+        confetti.style.transform = "rotate(" + (Math.random() * 360) + "deg)";
+
+        container.appendChild(confetti);
+
+        setTimeout(function() {
+            confetti.remove();
+        }, 2000);
     }
 }
 
